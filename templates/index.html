@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>ระบบตรวจจับใบหน้า</title>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body BGCOLOR="#FFE1FF"> </body>
+<div id=container>
+  <div id=flip>
+    <div><div>ระบบตรวจจับใบหน้า</div></div>
+    <div><div>ผู้เข้าใช้บริการ สวท.</div></div>
+    <div><div>NSTRU</div></div>
+  </div>
+</div>
+<br>
+<div align="left">
+  <img id="bg" width="80%"  src="{{ url_for('video_feed') }}">
+
+  <table class="container">
+    <thead>
+        <tr>
+            <th><h1>ชื่อ</h1></th>
+            <th><h1>เวลา</h1></th>
+            <th><h1>ความน่าจะเป็น</h1></th>
+        </tr>
+    </thead>
+    <tbody id="tableBody">
+    </tbody>
+  </table>
+</div><br>
+
+<div>
+    <a href="http://localhost:8081" target="_blank">
+    <Button style="border-radius: 2px; background-color: green; color: white;">จัดการระบบ</Button>
+</a>
+<a href="http://localhost:8080/details">
+    <Button style="border-radius: 2px; background-color: red; color: white;">รายละเอียด</Button>
+</a>
+</div>
+<script>
+  setInterval(() => {
+    $.getJSON("{{ url_for('query') }}", (data) => {
+      if (data.length == 0) {
+        return
+      }
+      $('#tableBody').empty();
+      data.forEach(element => {
+        const name = element[1];
+        const datetime = element[2];
+        const accuracy = element[3];
+        $('#tableBody').append('<tr><td>' + name + '</td><td>' + datetime + '</td><td>' + accuracy + '</td></tr>');
+      });
+    })
+  }, 1000)
+</script>
+</body>
+</html>
